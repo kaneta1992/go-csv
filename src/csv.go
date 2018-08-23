@@ -2,7 +2,6 @@ package kcsv
 
 import (
 	"encoding/csv"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -46,8 +45,6 @@ func NewFromFile(filepath string) *Csv {
 		record := NewRecord(c, row)
 		c.records = append(c.records, record)
 	}
-	fmt.Println(c.fieldNames)
-	fmt.Println(c.records)
 	return c
 }
 
@@ -145,4 +142,12 @@ func (c *Csv) Update(row map[string]string) *Csv {
 
 func (c *Csv) GetRecords() []*Record {
 	return c.records
+}
+
+func (c *Csv) Get(field string) []string {
+	ret := []string{}
+	c.iterRecord(func(record *Record) {
+		ret = append(ret, record.Get(field))
+	})
+	return ret
 }
