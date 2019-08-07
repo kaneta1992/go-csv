@@ -151,3 +151,24 @@ func (c *Csv) Get(field string) []string {
 	})
 	return ret
 }
+
+func (c *Csv) Uniq(field string) *Csv {
+	newCsv := &Csv{fieldNames: c.fieldNames}
+	records := []*Record{}
+
+	m := map[string]bool{}
+
+	c.iterRecord(func(record *Record) {
+		data := record.Get(field)
+		if _, ok := m[data]; ok {
+			// ある
+			return
+		}
+		// ない
+		m[data] = true
+		records = append(records, record)
+	})
+
+	newCsv.records = records
+	return newCsv
+}
